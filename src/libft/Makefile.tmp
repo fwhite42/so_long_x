@@ -1,0 +1,121 @@
+###############################################################################
+# Library Data
+###############################################################################
+NAME			:= libft.a
+HEADER			:= libft.h
+FUNCTION_PREFIX := ft_
+
+define FUNCTIONS
+	atoi\
+	bzero\
+	calloc\
+	isalnum\
+	isalpha\
+	isascii\
+	isdigit\
+	isprint\
+	itoa\
+	memchr\
+	memcmp\
+	memcpy\
+	memmove\
+	memset\
+	putchar_fd\
+	putendl_fd\
+	putnbr_fd\
+	putstr_fd\
+	split\
+	strchr\
+	strdup\
+	striteri\
+	strjoin\
+	strlcat\
+	strlcpy\
+	strlen\
+	strmapi\
+	strncmp\
+	strnstr\
+	strrchr\
+	strtrim\
+	substr\
+	tolower\
+	toupper
+endef
+
+define BONUS_FUNCTIONS
+	lstadd_back\
+	lstadd_front\
+	lstclear\
+	lstdelone\
+	lstiter\
+	lstmap\
+	lstnew\
+	lstsize
+endef
+
+###############################################################################
+# Objects
+###############################################################################
+define FUNCTION_OBJECTS
+	$(FUNCTIONS:%=$(srcdir)/$(FUNCTION_PREFIX)%.o)\
+	$(FUNCTIONS_BONUS:%=$(srcdir)/$(FUNCTION_PREFIX)%_bonus.o)
+endef
+
+###############################################################################
+# Directories
+###############################################################################
+srcdir		:= $(CURDIR)
+prefix		:= $(CURDIR)
+exec_prefix	:= $(CURDIR)
+libdir		:= $(exec_prefix)
+includedir	:= $(exec_prefix)
+
+vpath %.c $(srcdir)
+
+###############################################################################
+# Implicit Rules
+###############################################################################
+CC					:= cc
+CFLAGS				:= -Wall -Werror -Wextra
+CPPFLAGS			:= -I.
+AR					:= ar
+ARFLAGS				:= -src
+
+###############################################################################
+# Mandatory Targets
+###############################################################################
+$(NAME)	: $(NAME)($(FUNCTION_OBJECTS))
+
+all		: $(NAME)
+
+clean	:
+	@rm -f *.o
+
+fclean	: clean
+	rm -f $(NAME)
+
+re		: fclean all
+
+################################################################################
+# Install
+################################################################################
+INSTALLATION_DIRECTORIES	:= $(includedir) $(libdir)
+INSTALL						:= install
+INSTALL_PROGRAM				:= $(INSTALL)
+INSTALL_DATA				:= $(INSTALL)
+MKDIR_P						:=	mkdir -p
+
+$(INSTALLATION_DIRECTORIES):%:
+	$(MKDIR_P) $@
+
+install: $(HEADER) $(NAME) $(INSTALLATION_DIRECTORIES)
+	$(INSTALL_DATA) $(HEADER) $(includedir)
+	$(INSTALL_DATA) $(NAME) $(libdir)
+
+uninstall:
+ifneq ($(includedir), $(srcdir))
+	rm -f $(includedir)/$(HEADER)
+endif
+	-rmdir $(includedir)
+	-rm $(libdir)/$(NAME)
+	-rmdir $(libdir)
